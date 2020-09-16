@@ -20,17 +20,17 @@
 		{
 			"title": "第一个月",
 			"userCount": 100,
-			"per": 10.23
+			"per": 10
 		},
 		{
 			"title": "第二个月",
 			"userCount": 34,
-			"per": 30.23
+			"per": 30
 		},
 		{
 			"title": "第三个月",
 			"userCount": 56,
-			"per": 40.23
+			"per": 40
 		}
 	],
 	"className": "class 3"
