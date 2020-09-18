@@ -17,7 +17,6 @@ import org.docx4j.dml.chart.CTBarChart;
 import org.docx4j.dml.chart.CTBarSer;
 import org.docx4j.dml.chart.CTNumVal;
 import org.docx4j.dml.chart.CTStrVal;
-import org.docx4j.openpackaging.io.SaveToZipFile;
 import org.docx4j.openpackaging.io3.Save;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
