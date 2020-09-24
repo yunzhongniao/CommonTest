@@ -27,6 +27,7 @@ import org.docx4j.openpackaging.parts.SpreadsheetML.WorksheetPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.EmbeddedPackagePart;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
+import org.docx4j.relationships.Relationship;
 import org.docx4j.utils.BufferUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -282,5 +283,68 @@ public class WordChartV2Controller {
 		saver.save(baos);
 		epp.setBinaryData(baos.toByteArray());
 		Docx4J.save(template, outPath.toFile());
+	}
+
+	@ApiOperation(value = "print word relations")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx") })
+	@RequestMapping(value = "/relations/print", method = RequestMethod.GET)
+	public void printRelation(@RequestParam String wordName) throws Exception {
+		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+		log.info("source word file {}", wordPath.toString());
+
+		WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+		List<Relationship> relationships = template.getRelationshipsPart().getRelationships().getRelationship();
+		for (Relationship relationship : relationships) {
+			String type = relationship.getType();
+			String id = relationship.getId();
+			log.info("get relation type {}, id {}, target {}", type, id, relationship.getTarget());
+		}
+		List<Relationship> sourceRelationships = template.getMainDocumentPart().getSourceRelationships();
+		for (Relationship relationship : sourceRelationships) {
+			String type = relationship.getType();
+			String id = relationship.getId();
+			log.info("get main document source relation type {}, id {}, target {}", type, id, relationship.getTarget());
+		}
+		List<Relationship> maindocRelationships = template.getMainDocumentPart().getRelationshipsPart()
+				.getRelationships().getRelationship();
+		for (Relationship relationship : maindocRelationships) {
+			log.info("get main relation ship type {}, id {}, target {},target mode {}", relationship.getType(),
+					relationship.getId(), relationship.getTarget(), relationship.getTargetMode());
+		}
+	}
+
+	@ApiOperation(value = "print chart relations")
+	@ApiImplicitParams({
+			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx") })
+	@RequestMapping(value = "/relations/chart/print", method = RequestMethod.GET)
+	public void printChartRelation(@RequestParam String wordName) throws Exception {
+		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+		log.info("source word file {}", wordPath.toString());
+
+		WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+		List<Relationship> maindocRelationships = template.getMainDocumentPart().getRelationshipsPart()
+				.getRelationships().getRelationship();
+		for (Relationship relationship : maindocRelationships) {
+			String target = relationship.getTarget();
+			if (relationship.getType().endsWith("/relationships/chart")) { // 图表
+				log.info("get main relation chart type {}, id {}, target {},target mode {}", relationship.getType(),
+						relationship.getId(), target, relationship.getTargetMode());
+				Chart chart = (Chart) template.getParts().get(new PartName("/word/" + target));
+				List<Relationship> chartRelations = chart.getRelationshipsPart().getRelationships().getRelationship();
+				String xlsxName = null;
+				for (Relationship chartRelation : chartRelations) {
+					if (chartRelation.getType().endsWith("/relationships/package") // 图表关联的xlsx
+							&& chartRelation.getTarget().endsWith(".xlsx")) {
+						log.info("chart xlsx {} relation {} target {} type {}", target, chartRelation.getId(),
+								chartRelation.getTarget(), chartRelation.getType());
+						xlsxName = chartRelation.getTarget().replaceFirst("../", "/word/");// "/word/embeddings/Workbook1.xlsx"
+						log.info("chart xlsx {} xlsxName {}", target, xlsxName);
+					}
+				}
+			}
+		}
 	}
 }
