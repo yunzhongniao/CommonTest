@@ -32,7 +32,6 @@ import org.xlsx4j.sml.Row;
 import org.xlsx4j.sml.STCellType;
 import org.yunzhong.CommonTest.controller.docx4j.module.ParamData;
 import org.yunzhong.CommonTest.controller.docx4j.module.ParamData.ParamRow;
-import org.yunzhong.CommonTest.model.UserTableModel.UserStat;
 
 @Service
 public class WordManageService {
@@ -57,7 +56,7 @@ public class WordManageService {
     public void replaceChart(WordprocessingMLPackage template, ParamData paramMap) throws Exception {
         List<Relationship> maindocRelationships = template.getMainDocumentPart().getRelationshipsPart()
                 .getRelationships().getRelationship();
-        int index = 0;
+        Integer index = 0;
         for (Relationship relationship : maindocRelationships) {
             String target = relationship.getTarget();
             if (relationship.getType().endsWith("/relationships/chart")) { // 图表
@@ -74,8 +73,8 @@ public class WordManageService {
                         xlsxName = chartRelation.getTarget().replaceFirst("../", "/word/");// "/word/embeddings/Workbook1.xlsx"
                     }
                 }
+                assembleChart(chart, paramMap, index);
                 if (xlsxName != null) {
-                    assembleChart(chart, paramMap, index);
                     EmbeddedPackagePart epp = (EmbeddedPackagePart) template.getParts().get(new PartName(xlsxName));
                     InputStream is = BufferUtil.newInputStream(epp.getBuffer());
                     SpreadsheetMLPackage spreadSheet = (SpreadsheetMLPackage) SpreadsheetMLPackage.load(is);
@@ -120,13 +119,13 @@ public class WordManageService {
 
     }
 
-    private void assembleChart(Chart chart, ParamData paramMap, int index) {
+    private void assembleChart(Chart chart, ParamData paramMap, Integer index) {
         List<Object> objects = chart.getJaxbElement().getChart().getPlotArea().getAreaChartOrArea3DChartOrLineChart();
 
         for (Object object : objects) {
             if (object instanceof CTBarChart) {
                 List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
-                List<ParamRow> paramRows = paramMap.getDatas().get(index);
+                List<ParamRow> paramRows = paramMap.getDatas().get(index.toString());
                 for (int j = 0; j < ctBarSers.size(); j++) {// 列
                     CTBarSer ctBarSer = ctBarSers.get(j);
                     List<CTNumVal> ctNumVals = ctBarSer.getVal().getNumRef().getNumCache().getPt();
