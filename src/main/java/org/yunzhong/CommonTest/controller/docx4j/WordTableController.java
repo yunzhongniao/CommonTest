@@ -49,167 +49,167 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "docx4j deal words")
 public class WordTableController {
 
-	private static final Logger log = LoggerFactory.getLogger(WordTableController.class);
+    private static final Logger log = LoggerFactory.getLogger(WordTableController.class);
 
-	@ApiOperation(value = "replace table param")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable.docx"),
-			@ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
-	@RequestMapping(value = "/print", method = RequestMethod.GET)
-	public List<String> printStructure(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
-		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
-		Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
-		log.info("source word file {}", wordPath.toString());
-		log.info("json param path {}", jsonPath.toString());
+    @ApiOperation(value = "replace table param")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable.docx"),
+            @ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
+    @RequestMapping(value = "/print", method = RequestMethod.GET)
+    public List<String> printStructure(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
+        log.info("source word file {}", wordPath.toString());
+        log.info("json param path {}", jsonPath.toString());
 
-		List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<String>();
 
-		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(wordPath.toFile());
-		HashMap<String, CustomXmlPart> customXmlDataStorageParts = wordMLPackage.getPackage()
-				.getCustomXmlDataStorageParts();
-		for (Iterator<Entry<String, CustomXmlPart>> iterator = customXmlDataStorageParts.entrySet().iterator(); iterator
-				.hasNext();) {
-			Entry<String, CustomXmlPart> part = iterator.next();
-			String key = part.getKey();
-			CustomXmlPart value = part.getValue();
-			log.info("custom xml part : {}", key);
-		}
-		HashMap<ExternalTarget, Part> externalResources = wordMLPackage.getExternalResources();
-		for (Iterator<Entry<ExternalTarget, Part>> iterator = externalResources.entrySet().iterator(); iterator
-				.hasNext();) {
-			Entry<ExternalTarget, Part> entry = iterator.next();
-			ExternalTarget key = entry.getKey();
-			Part value = entry.getValue();
-			log.info("external resource : {}", key.toString());
-		}
-		List<Relationship> relationships = wordMLPackage.getRelationshipsPart().getRelationships().getRelationship();
-		for (Relationship relationship : relationships) {
-			log.info("relationship id: {}, target: {}, targetMode:{}, type: {}", relationship.getId(),
-					relationship.getTarget(), relationship.getTargetMode(), relationship.getType());
-		}
-		HashMap<PartName, Part> parts = wordMLPackage.getParts().getParts();
-		for (Iterator<Entry<PartName, Part>> iterator = parts.entrySet().iterator(); iterator.hasNext();) {
-			Entry<PartName, Part> next = iterator.next();
-			PartName key = next.getKey();
-			Part value = next.getValue();
-			log.info("parts key: {}, uri: {}", key.getName(), key.getURI());
-			if (key.getName().startsWith("/word/charts/chart")) {
-				log.info("parts key: {}, uri: {}", key.getName(), key.getURI());
-			}
-		}
-		return result;
-	}
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(wordPath.toFile());
+        HashMap<String, CustomXmlPart> customXmlDataStorageParts = wordMLPackage.getPackage()
+                .getCustomXmlDataStorageParts();
+        for (Iterator<Entry<String, CustomXmlPart>> iterator = customXmlDataStorageParts.entrySet().iterator(); iterator
+                .hasNext();) {
+            Entry<String, CustomXmlPart> part = iterator.next();
+            String key = part.getKey();
+            CustomXmlPart value = part.getValue();
+            log.info("custom xml part : {}", key);
+        }
+        HashMap<ExternalTarget, Part> externalResources = wordMLPackage.getExternalResources();
+        for (Iterator<Entry<ExternalTarget, Part>> iterator = externalResources.entrySet().iterator(); iterator
+                .hasNext();) {
+            Entry<ExternalTarget, Part> entry = iterator.next();
+            ExternalTarget key = entry.getKey();
+            Part value = entry.getValue();
+            log.info("external resource : {}", key.toString());
+        }
+        List<Relationship> relationships = wordMLPackage.getRelationshipsPart().getRelationships().getRelationship();
+        for (Relationship relationship : relationships) {
+            log.info("relationship id: {}, target: {}, targetMode:{}, type: {}", relationship.getId(),
+                    relationship.getTarget(), relationship.getTargetMode(), relationship.getType());
+        }
+        HashMap<PartName, Part> parts = wordMLPackage.getParts().getParts();
+        for (Iterator<Entry<PartName, Part>> iterator = parts.entrySet().iterator(); iterator.hasNext();) {
+            Entry<PartName, Part> next = iterator.next();
+            PartName key = next.getKey();
+            Part value = next.getValue();
+            log.info("parts key: {}, uri: {}", key.getName(), key.getURI());
+            if (key.getName().startsWith("/word/charts/chart")) {
+                log.info("parts key: {}, uri: {}", key.getName(), key.getURI());
+            }
+        }
+        return result;
+    }
 
-	@ApiOperation(value = "replace table param")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
-			@ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
-	@RequestMapping(value = "/replace/table", method = RequestMethod.GET)
-	public void replaceTable(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
-		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
-		Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "replace-" + wordName);
-		log.info("source word file {}", wordPath.toString());
-		log.info("json param path {}", jsonPath.toString());
-		log.info("out file path {}", outPath.toString());
+    @ApiOperation(value = "replace table param")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
+            @ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
+    @RequestMapping(value = "/replace/table", method = RequestMethod.GET)
+    public void replaceTable(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "replace-" + wordName);
+        log.info("source word file {}", wordPath.toString());
+        log.info("json param path {}", jsonPath.toString());
+        log.info("out file path {}", outPath.toString());
 
-		UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
-		Map<String, String> params = parseToMap(userTableModel);
-		Map<String, String> keyParams = parseToKeyMap(userTableModel);
+        UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
+        Map<String, String> params = parseToMap(userTableModel);
+        Map<String, String> keyParams = parseToKeyMap(userTableModel);
 
-		WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
-		MainDocumentPart documentPart = template.getMainDocumentPart();
-		VariablePrepare.prepare(template);
-		documentPart.variableReplace(params);
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+        MainDocumentPart documentPart = template.getMainDocumentPart();
+        VariablePrepare.prepare(template);
+        documentPart.variableReplace(params);
 
-		Part part = template.getParts().get(new PartName("/word/charts/chart1.xml"));
-		Chart chart = (Chart) part;
-		String xml = chart.getXML();
-		log.info("chart1 xml :{}", xml);
-		CTPlotArea plotArea = chart.getJaxbElement().getChart().getPlotArea();
-		List<Object> objects = plotArea.getAreaChartOrArea3DChartOrLineChart();
-		// update chart values in doc
-		for (Object object : objects) {
-			if (object instanceof CTBarChart) {
-				List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
-				for (CTBarSer ctBarSer : ctBarSers) {
-					List<CTStrVal> pts = ctBarSer.getTx().getStrRef().getStrCache().getPt();
-					if (!CollectionUtils.isEmpty(pts)) {
-						for (CTStrVal pt : pts) {
-							String value = pt.getV();
-							if (keyParams.containsKey(value)) {
-								pt.setV(keyParams.get(value));
-							}
-						}
-					}
-				}
-			}
-		}
-		String xmlAfterUpdate = chart.getXML();
-		log.info("chart1 after update xml :{}", xmlAfterUpdate);
-		Docx4J.save(template, outPath.toFile());
-	}
+        Part part = template.getParts().get(new PartName("/word/charts/chart1.xml"));
+        Chart chart = (Chart) part;
+        String xml = chart.getXML();
+        log.info("chart1 xml :{}", xml);
+        CTPlotArea plotArea = chart.getJaxbElement().getChart().getPlotArea();
+        List<Object> objects = plotArea.getAreaChartOrArea3DChartOrLineChart();
+        // update chart values in doc
+        for (Object object : objects) {
+            if (object instanceof CTBarChart) {
+                List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
+                for (CTBarSer ctBarSer : ctBarSers) {
+                    List<CTStrVal> pts = ctBarSer.getTx().getStrRef().getStrCache().getPt();
+                    if (!CollectionUtils.isEmpty(pts)) {
+                        for (CTStrVal pt : pts) {
+                            String value = pt.getV();
+                            if (keyParams.containsKey(value)) {
+                                pt.setV(keyParams.get(value));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        String xmlAfterUpdate = chart.getXML();
+        log.info("chart1 after update xml :{}", xmlAfterUpdate);
+        Docx4J.save(template, outPath.toFile());
+    }
 
-	private Map<String, String> parseToMap(UserTableModel userTableModel) {
-		if (userTableModel == null) {
-			return null;
-		}
-		Map<String, String> result = new HashMap<String, String>();
-		if (StringUtils.isEmpty(userTableModel.getClassName())) {
-			result.put("userStat.className", userTableModel.getClassName());
-		} else {
-			result.put("userStat.className", "");
-		}
-		if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
-			for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
-				UserStat userStat = userTableModel.getUserStats().get(i);
-				String titleName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "title");
-				String titleValue = userStat.getTitle();
-				result.put(titleName, titleValue);
+    private Map<String, String> parseToMap(UserTableModel userTableModel) {
+        if (userTableModel == null) {
+            return null;
+        }
+        Map<String, String> result = new HashMap<String, String>();
+        if (StringUtils.isEmpty(userTableModel.getClassName())) {
+            result.put("userStat.className", userTableModel.getClassName());
+        } else {
+            result.put("userStat.className", "");
+        }
+        if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
+            for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
+                UserStat userStat = userTableModel.getUserStats().get(i);
+                String titleName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "title");
+                String titleValue = userStat.getTitle();
+                result.put(titleName, titleValue);
 
-				String userCountName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "userCount");
-				String userCountValue = userStat.getUserCount().toString();
-				result.put(userCountName, userCountValue);
+                String userCountName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "userCount");
+                String userCountValue = userStat.getUserCount().toString();
+                result.put(userCountName, userCountValue);
 
-				String perName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "per");
-				String perValue = userStat.getPer().toString();
-				result.put(perName, perValue);
-			}
-		}
+                String perName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "per");
+                String perValue = userStat.getPer().toString();
+                result.put(perName, perValue);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private Map<String, String> parseToKeyMap(UserTableModel userTableModel) {
-		if (userTableModel == null) {
-			return null;
-		}
-		Map<String, String> result = new HashMap<String, String>();
-		if (StringUtils.isEmpty(userTableModel.getClassName())) {
-			result.put("${userStat.className}", userTableModel.getClassName());
-		} else {
-			result.put("${userStat.className}", "");
-		}
-		if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
-			for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
-				UserStat userStat = userTableModel.getUserStats().get(i);
-				String titleName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "title");
-				String titleValue = userStat.getTitle();
-				result.put(titleName, titleValue);
+    private Map<String, String> parseToKeyMap(UserTableModel userTableModel) {
+        if (userTableModel == null) {
+            return null;
+        }
+        Map<String, String> result = new HashMap<String, String>();
+        if (StringUtils.isEmpty(userTableModel.getClassName())) {
+            result.put("${userStat.className}", userTableModel.getClassName());
+        } else {
+            result.put("${userStat.className}", "");
+        }
+        if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
+            for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
+                UserStat userStat = userTableModel.getUserStats().get(i);
+                String titleName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "title");
+                String titleValue = userStat.getTitle();
+                result.put(titleName, titleValue);
 
-				String userCountName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i),
-						"userCount");
-				String userCountValue = userStat.getUserCount().toString();
-				result.put(userCountName, userCountValue);
+                String userCountName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i),
+                        "userCount");
+                String userCountValue = userStat.getUserCount().toString();
+                result.put(userCountName, userCountValue);
 
-				String perName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "per");
-				String perValue = userStat.getPer().toString();
-				result.put(perName, perValue);
-			}
-		}
+                String perName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "per");
+                String perValue = userStat.getPer().toString();
+                result.put(perName, perValue);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 }

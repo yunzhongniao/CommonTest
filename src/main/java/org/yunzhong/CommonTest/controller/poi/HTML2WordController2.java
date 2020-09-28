@@ -27,68 +27,68 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "html to word second method")
 public class HTML2WordController2 {
 
-	private static final Logger log = LoggerFactory.getLogger(HTML2WordController2.class);
+    private static final Logger log = LoggerFactory.getLogger(HTML2WordController2.class);
 
-	@ApiOperation(value = "convert html to word")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "fileName", required = true, defaultValue = "words.html") })
-	@RequestMapping(value = "/convert", method = RequestMethod.GET)
-	public void convert(@RequestParam String fileName) throws URISyntaxException, IOException {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("templates");
-		Path resourcePath = Paths.get(parentPathURL.getPath(), fileName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "words.doc");
-		log.info("resource {}", resourcePath.toString());
-		log.info("out path {}", outPath.toString());
-		POIFSFileSystem poiFileSystem = new POIFSFileSystem();
-		try {
-			InputStream stream = Files.newInputStream(resourcePath);
-			OutputStream outputStream = Files.newOutputStream(outPath);
-			poiFileSystem.createDocument(stream, "Document");
-			poiFileSystem.writeFilesystem(outputStream);
-		} finally {
-			poiFileSystem.close();
-		}
-	}
+    @ApiOperation(value = "convert html to word")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "fileName", required = true, defaultValue = "words.html") })
+    @RequestMapping(value = "/convert", method = RequestMethod.GET)
+    public void convert(@RequestParam String fileName) throws URISyntaxException, IOException {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("templates");
+        Path resourcePath = Paths.get(parentPathURL.getPath(), fileName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "words.doc");
+        log.info("resource {}", resourcePath.toString());
+        log.info("out path {}", outPath.toString());
+        POIFSFileSystem poiFileSystem = new POIFSFileSystem();
+        try {
+            InputStream stream = Files.newInputStream(resourcePath);
+            OutputStream outputStream = Files.newOutputStream(outPath);
+            poiFileSystem.createDocument(stream, "Document");
+            poiFileSystem.writeFilesystem(outputStream);
+        } finally {
+            poiFileSystem.close();
+        }
+    }
 
-	@ApiOperation(value = "convert html to word with table")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "fileName", required = true, defaultValue = "tables.html") })
-	@RequestMapping(value = "/convert/with/table", method = RequestMethod.GET)
-	public void convertWithTable(@RequestParam String fileName) throws URISyntaxException, IOException {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("templates");
-		Path resourcePath = Paths.get(parentPathURL.getPath(), fileName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "tables.doc");
-		log.info("resource {}", resourcePath.toString());
-		log.info("out path {}", outPath.toString());
-		POIFSFileSystem poiFileSystem = new POIFSFileSystem();
-		try {
-			InputStream stream = Files.newInputStream(resourcePath);
-			OutputStream outputStream = Files.newOutputStream(outPath);
-			poiFileSystem.createDocument(stream, "Document");
-			poiFileSystem.writeFilesystem(outputStream);
-		} finally {
-			poiFileSystem.close();
-		}
-	}
+    @ApiOperation(value = "convert html to word with table")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "fileName", required = true, defaultValue = "tables.html") })
+    @RequestMapping(value = "/convert/with/table", method = RequestMethod.GET)
+    public void convertWithTable(@RequestParam String fileName) throws URISyntaxException, IOException {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("templates");
+        Path resourcePath = Paths.get(parentPathURL.getPath(), fileName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "tables.doc");
+        log.info("resource {}", resourcePath.toString());
+        log.info("out path {}", outPath.toString());
+        POIFSFileSystem poiFileSystem = new POIFSFileSystem();
+        try {
+            InputStream stream = Files.newInputStream(resourcePath);
+            OutputStream outputStream = Files.newOutputStream(outPath);
+            poiFileSystem.createDocument(stream, "Document");
+            poiFileSystem.writeFilesystem(outputStream);
+        } finally {
+            poiFileSystem.close();
+        }
+    }
 
-	@ApiOperation(value = "convert html to word with image")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "fileName", required = true, defaultValue = "words.html") })
-	@RequestMapping(value = "/convert/with/image", method = RequestMethod.GET)
-	public void convertWithImage(@RequestParam String fileName) throws URISyntaxException, IOException {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("templates");
-		Path resourcePath = Paths.get(parentPathURL.getPath(), fileName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "images.doc");
-		log.info("resource {}", resourcePath.toString());
-		log.info("out path {}", outPath.toString());
-		POIFSFileSystem poiFileSystem = new POIFSFileSystem();
-		try {
-			InputStream stream = Files.newInputStream(resourcePath);
-			OutputStream outputStream = Files.newOutputStream(outPath);
-			poiFileSystem.createDocument(stream, "Document");
-			poiFileSystem.writeFilesystem(outputStream);
-		} finally {
-			poiFileSystem.close();
-		}
-	}
+    @ApiOperation(value = "convert html to word with image")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "fileName", required = true, defaultValue = "words.html") })
+    @RequestMapping(value = "/convert/with/image", method = RequestMethod.GET)
+    public void convertWithImage(@RequestParam String fileName) throws URISyntaxException, IOException {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("templates");
+        Path resourcePath = Paths.get(parentPathURL.getPath(), fileName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "images.doc");
+        log.info("resource {}", resourcePath.toString());
+        log.info("out path {}", outPath.toString());
+        POIFSFileSystem poiFileSystem = new POIFSFileSystem();
+        try {
+            InputStream stream = Files.newInputStream(resourcePath);
+            OutputStream outputStream = Files.newOutputStream(outPath);
+            poiFileSystem.createDocument(stream, "Document");
+            poiFileSystem.writeFilesystem(outputStream);
+        } finally {
+            poiFileSystem.close();
+        }
+    }
 }

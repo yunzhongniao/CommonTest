@@ -18,28 +18,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyResourceLoader {
 
-	@Autowired
-	private ConfigurableEnvironment environment;
+    @Autowired
+    private ConfigurableEnvironment environment;
 
-	@PostConstruct
-	public void postProcessEnvironment() {
-		PropertiesPropertySourceLoader propertiesPropertySourceLoader = new PropertiesPropertySourceLoader();
-		ClassPathResource classPathResource = new ClassPathResource("myConfig/config.properties");
-		try {
-			List<PropertySource<?>> properties = propertiesPropertySourceLoader.load("custom", classPathResource);
-			for (PropertySource<?> property : properties) {
-				environment.getPropertySources().addLast(property);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		environment.getPropertySources().forEach(source -> {
-			System.out.println("all resources:" + source.getName() + " | value: " + source.getSource());
-		});
-		PropertySource<?> propertySource = environment.getPropertySources().get("custom");
-		Object property = propertySource.getProperty("yunzhong.config.mine");
-		System.out.println("load resource yunzhong.config: " + environment.getProperty("yunzhong.config"));
-		System.out.println("load resource yunzhong.config.mine: "
-				+ environment.getProperty("yunzhong.config.mine"));
-	}
+    @PostConstruct
+    public void postProcessEnvironment() {
+        PropertiesPropertySourceLoader propertiesPropertySourceLoader = new PropertiesPropertySourceLoader();
+        ClassPathResource classPathResource = new ClassPathResource("myConfig/config.properties");
+        try {
+            List<PropertySource<?>> properties = propertiesPropertySourceLoader.load("custom", classPathResource);
+            for (PropertySource<?> property : properties) {
+                environment.getPropertySources().addLast(property);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        environment.getPropertySources().forEach(source -> {
+            System.out.println("all resources:" + source.getName() + " | value: " + source.getSource());
+        });
+        PropertySource<?> propertySource = environment.getPropertySources().get("custom");
+        Object property = propertySource.getProperty("yunzhong.config.mine");
+        System.out.println("load resource yunzhong.config: " + environment.getProperty("yunzhong.config"));
+        System.out.println("load resource yunzhong.config.mine: " + environment.getProperty("yunzhong.config.mine"));
+    }
 }

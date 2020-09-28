@@ -54,282 +54,281 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "docx4j deal words")
 public class WordChartController {
 
-	private static final Logger log = LoggerFactory.getLogger(WordChartController.class);
+    private static final Logger log = LoggerFactory.getLogger(WordChartController.class);
 
-	@ApiOperation(value = "replace table param")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
-			@ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
-	@RequestMapping(value = "/replace", method = RequestMethod.GET)
-	public void replaceTable(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
-		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
-		Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "replace-" + wordName);
-		log.info("source word file {}", wordPath.toString());
-		log.info("json param path {}", jsonPath.toString());
-		log.info("out file path {}", outPath.toString());
+    @ApiOperation(value = "replace table param")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
+            @ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
+    @RequestMapping(value = "/replace", method = RequestMethod.GET)
+    public void replaceTable(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "replace-" + wordName);
+        log.info("source word file {}", wordPath.toString());
+        log.info("json param path {}", jsonPath.toString());
+        log.info("out file path {}", outPath.toString());
 
-		UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
-		Map<String, String> params = parseToMap(userTableModel);
-		Map<String, String> keyParams = parseToKeyMap(userTableModel);
+        UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
+        Map<String, String> params = parseToMap(userTableModel);
+        Map<String, String> keyParams = parseToKeyMap(userTableModel);
 
-		WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
-		MainDocumentPart documentPart = template.getMainDocumentPart();
-		VariablePrepare.prepare(template);
-		documentPart.variableReplace(params);
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+        MainDocumentPart documentPart = template.getMainDocumentPart();
+        VariablePrepare.prepare(template);
+        documentPart.variableReplace(params);
 
-		Part part = template.getParts().get(new PartName("/word/charts/chart1.xml"));
-		Chart chart = (Chart) part;
-		String xml = chart.getXML();
-		log.info("chart1 xml :{}", xml);
-		CTPlotArea plotArea = chart.getJaxbElement().getChart().getPlotArea();
-		List<Object> objects = plotArea.getAreaChartOrArea3DChartOrLineChart();
-		// update chart values in doc
-		for (Object object : objects) {
-			if (object instanceof CTBarChart) {
-				List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
-				for (CTBarSer ctBarSer : ctBarSers) {
-					List<CTStrVal> pts = ctBarSer.getTx().getStrRef().getStrCache().getPt();
-					if (!CollectionUtils.isEmpty(pts)) {
-						for (CTStrVal pt : pts) {
-							String value = pt.getV();
-							if (keyParams.containsKey(value)) {
-								pt.setV(keyParams.get(value));
-							}
-						}
-					}
-				}
-			}
-		}
-		EmbeddedPackagePart xlsxDataPart = (EmbeddedPackagePart) template.getParts()
-				.get(new PartName("/word/embeddings/Workbook1.xlsx"));
+        Part part = template.getParts().get(new PartName("/word/charts/chart1.xml"));
+        Chart chart = (Chart) part;
+        String xml = chart.getXML();
+        log.info("chart1 xml :{}", xml);
+        CTPlotArea plotArea = chart.getJaxbElement().getChart().getPlotArea();
+        List<Object> objects = plotArea.getAreaChartOrArea3DChartOrLineChart();
+        // update chart values in doc
+        for (Object object : objects) {
+            if (object instanceof CTBarChart) {
+                List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
+                for (CTBarSer ctBarSer : ctBarSers) {
+                    List<CTStrVal> pts = ctBarSer.getTx().getStrRef().getStrCache().getPt();
+                    if (!CollectionUtils.isEmpty(pts)) {
+                        for (CTStrVal pt : pts) {
+                            String value = pt.getV();
+                            if (keyParams.containsKey(value)) {
+                                pt.setV(keyParams.get(value));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        EmbeddedPackagePart xlsxDataPart = (EmbeddedPackagePart) template.getParts()
+                .get(new PartName("/word/embeddings/Workbook1.xlsx"));
 
-		ByteArrayInputStream xlsxInputStream = new ByteArrayInputStream(xlsxDataPart.getBytes());
-		SpreadsheetMLPackage xlsxPackge = SpreadsheetMLPackage.load(xlsxInputStream);
-		JaxbSmlPart smlPart = (JaxbSmlPart) xlsxPackge.getParts().get(new PartName("/xl/sharedStrings.xml"));
-		smlPart.variableReplace(params);
+        ByteArrayInputStream xlsxInputStream = new ByteArrayInputStream(xlsxDataPart.getBytes());
+        SpreadsheetMLPackage xlsxPackge = SpreadsheetMLPackage.load(xlsxInputStream);
+        JaxbSmlPart smlPart = (JaxbSmlPart) xlsxPackge.getParts().get(new PartName("/xl/sharedStrings.xml"));
+        smlPart.variableReplace(params);
 
-		ByteArrayOutputStream xlsxOutputStream = new ByteArrayOutputStream();
-		xlsxPackge.save(xlsxOutputStream);
+        ByteArrayOutputStream xlsxOutputStream = new ByteArrayOutputStream();
+        xlsxPackge.save(xlsxOutputStream);
 
-		xlsxDataPart.setBinaryData(xlsxOutputStream.toByteArray());
-		template.getParts().put(xlsxDataPart);
+        xlsxDataPart.setBinaryData(xlsxOutputStream.toByteArray());
+        template.getParts().put(xlsxDataPart);
 
-		Docx4J.save(template, outPath.toFile());
-	}
+        Docx4J.save(template, outPath.toFile());
+    }
 
-	@ApiOperation(value = "replace table param self param data type")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
-			@ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
-	@RequestMapping(value = "/replace/slef-def", method = RequestMethod.GET)
-	public void replaceTableSelf(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
-		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
-		Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "replace-" + wordName);
-		log.info("source word file {}", wordPath.toString());
-		log.info("json param path {}", jsonPath.toString());
-		log.info("out file path {}", outPath.toString());
+    @ApiOperation(value = "replace table param self param data type")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
+            @ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
+    @RequestMapping(value = "/replace/slef-def", method = RequestMethod.GET)
+    public void replaceTableSelf(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "replace-" + wordName);
+        log.info("source word file {}", wordPath.toString());
+        log.info("json param path {}", jsonPath.toString());
+        log.info("out file path {}", outPath.toString());
 
-		UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
-		Map<String, String> params = parseToMap(userTableModel);
-		Map objParams = parseToObjMap(userTableModel);
+        UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
+        Map<String, String> params = parseToMap(userTableModel);
+        Map objParams = parseToObjMap(userTableModel);
 
-		WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
-		MainDocumentPart documentPart = template.getMainDocumentPart();
-		VariablePrepare.prepare(template);
-		documentPart.variableReplace(params);
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+        MainDocumentPart documentPart = template.getMainDocumentPart();
+        VariablePrepare.prepare(template);
+        documentPart.variableReplace(params);
 
-		EmbeddedPackagePart xlsxDataPart = (EmbeddedPackagePart) template.getParts()
-				.get(new PartName("/word/embeddings/Workbook1.xlsx"));
+        EmbeddedPackagePart xlsxDataPart = (EmbeddedPackagePart) template.getParts()
+                .get(new PartName("/word/embeddings/Workbook1.xlsx"));
 
-		ByteArrayInputStream xlsxInputStream = new ByteArrayInputStream(xlsxDataPart.getBytes());
-		SpreadsheetMLPackage xlsxPackge = SpreadsheetMLPackage.load(xlsxInputStream);
-		SharedStrings smlPart = (SharedStrings) xlsxPackge.getParts().get(new PartName("/xl/sharedStrings.xml"));
-		smlPart.variableReplace(objParams);
+        ByteArrayInputStream xlsxInputStream = new ByteArrayInputStream(xlsxDataPart.getBytes());
+        SpreadsheetMLPackage xlsxPackge = SpreadsheetMLPackage.load(xlsxInputStream);
+        SharedStrings smlPart = (SharedStrings) xlsxPackge.getParts().get(new PartName("/xl/sharedStrings.xml"));
+        smlPart.variableReplace(objParams);
 
-		ByteArrayOutputStream xlsxOutputStream = new ByteArrayOutputStream();
-		xlsxPackge.save(xlsxOutputStream);
+        ByteArrayOutputStream xlsxOutputStream = new ByteArrayOutputStream();
+        xlsxPackge.save(xlsxOutputStream);
 
-		xlsxDataPart.setBinaryData(xlsxOutputStream.toByteArray());
-		template.getParts().put(xlsxDataPart);
+        xlsxDataPart.setBinaryData(xlsxOutputStream.toByteArray());
+        template.getParts().put(xlsxDataPart);
 
-		Docx4J.save(template, outPath.toFile());
-	}
+        Docx4J.save(template, outPath.toFile());
+    }
 
-	@ApiOperation(value = "replace table param and format type")
-	@ApiImplicitParams({
-			@ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
-			@ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
-	@RequestMapping(value = "/replace/typeFormat", method = RequestMethod.GET)
-	public void replaceTableTypeFormat(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
-		URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
-		Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
-		Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
-		Path outPath = Paths.get(parentPathURL.getPath(), "replace-format-" + wordName);
-		log.info("source word file {}", wordPath.toString());
-		log.info("json param path {}", jsonPath.toString());
-		log.info("out file path {}", outPath.toString());
+    @ApiOperation(value = "replace table param and format type")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTable2.docx"),
+            @ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
+    @RequestMapping(value = "/replace/typeFormat", method = RequestMethod.GET)
+    public void replaceTableTypeFormat(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path jsonPath = Paths.get(parentPathURL.getPath(), jsonName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "replace-format-" + wordName);
+        log.info("source word file {}", wordPath.toString());
+        log.info("json param path {}", jsonPath.toString());
+        log.info("out file path {}", outPath.toString());
 
-		UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
-		Map<String, String> params = parseToMap(userTableModel);
-		Map<String, String> keyParams = parseToKeyMap(userTableModel);
-		Map objParams = parseToObjMap(userTableModel);
+        UserTableModel userTableModel = JsonUtil.fromJson(Files.readString(jsonPath), UserTableModel.class);
+        Map<String, String> params = parseToMap(userTableModel);
+        Map<String, String> keyParams = parseToKeyMap(userTableModel);
+        Map objParams = parseToObjMap(userTableModel);
 
-		WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
 
-		Part part = template.getParts().get(new PartName("/word/charts/chart1.xml"));
-		Chart chart = (Chart) part;
-		CTPlotArea plotArea = chart.getJaxbElement().getChart().getPlotArea();
-		List<Object> objects = plotArea.getAreaChartOrArea3DChartOrLineChart();
-		// update chart values in doc
-		for (Object object : objects) {
-			if (object instanceof CTBarChart) {
-				List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
-				for (CTBarSer ctBarSer : ctBarSers) {
-					List<CTStrVal> pts = ctBarSer.getTx().getStrRef().getStrCache().getPt();
-					if (!CollectionUtils.isEmpty(pts)) {
-						for (CTStrVal pt : pts) {
-							String value = pt.getV();
-							if (keyParams.containsKey(value)) {
-								pt.setV(keyParams.get(value));
-							}
-						}
-					}
-				}
-			}
-		}
+        Part part = template.getParts().get(new PartName("/word/charts/chart1.xml"));
+        Chart chart = (Chart) part;
+        CTPlotArea plotArea = chart.getJaxbElement().getChart().getPlotArea();
+        List<Object> objects = plotArea.getAreaChartOrArea3DChartOrLineChart();
+        // update chart values in doc
+        for (Object object : objects) {
+            if (object instanceof CTBarChart) {
+                List<CTBarSer> ctBarSers = ((CTBarChart) object).getSer();
+                for (CTBarSer ctBarSer : ctBarSers) {
+                    List<CTStrVal> pts = ctBarSer.getTx().getStrRef().getStrCache().getPt();
+                    if (!CollectionUtils.isEmpty(pts)) {
+                        for (CTStrVal pt : pts) {
+                            String value = pt.getV();
+                            if (keyParams.containsKey(value)) {
+                                pt.setV(keyParams.get(value));
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-		MainDocumentPart documentPart = template.getMainDocumentPart();
-		VariablePrepare.prepare(template);
-		documentPart.variableReplace(params);
+        MainDocumentPart documentPart = template.getMainDocumentPart();
+        VariablePrepare.prepare(template);
+        documentPart.variableReplace(params);
 
-		EmbeddedPackagePart xlsxDataPart = (EmbeddedPackagePart) template.getParts()
-				.get(new PartName("/word/embeddings/Workbook1.xlsx"));
-		ByteArrayInputStream xlsxInputStream = new ByteArrayInputStream(xlsxDataPart.getBytes());
-		SpreadsheetMLPackage xlsxPackge = SpreadsheetMLPackage.load(xlsxInputStream);
-		SharedStrings smlPart = (SharedStrings) xlsxPackge.getParts().get(new PartName("/xl/sharedStrings.xml"));
-		smlPart.variableReplace(objParams);
+        EmbeddedPackagePart xlsxDataPart = (EmbeddedPackagePart) template.getParts()
+                .get(new PartName("/word/embeddings/Workbook1.xlsx"));
+        ByteArrayInputStream xlsxInputStream = new ByteArrayInputStream(xlsxDataPart.getBytes());
+        SpreadsheetMLPackage xlsxPackge = SpreadsheetMLPackage.load(xlsxInputStream);
+        SharedStrings smlPart = (SharedStrings) xlsxPackge.getParts().get(new PartName("/xl/sharedStrings.xml"));
+        smlPart.variableReplace(objParams);
 
-		ByteArrayOutputStream xlsxOutputStream = new ByteArrayOutputStream();
-		xlsxPackge.save(xlsxOutputStream);
-		xlsxDataPart.setBinaryData(xlsxOutputStream.toByteArray());
-		template.getParts().put(xlsxDataPart);
+        ByteArrayOutputStream xlsxOutputStream = new ByteArrayOutputStream();
+        xlsxPackge.save(xlsxOutputStream);
+        xlsxDataPart.setBinaryData(xlsxOutputStream.toByteArray());
+        template.getParts().put(xlsxDataPart);
 
-		
-		EmbeddedPackagePart xlsxDataPart2 = (EmbeddedPackagePart) template.getParts()
-				.get(new PartName("/word/embeddings/Workbook1.xlsx"));
-		ByteArrayInputStream xlsxInputStream2 = new ByteArrayInputStream(xlsxDataPart2.getBytes());
-		SpreadsheetMLPackage xlsxPackge2 = SpreadsheetMLPackage.load(xlsxInputStream2);
-		// change data format
-		WorksheetPart worksheet = xlsxPackge2.getWorkbookPart().getWorksheet(0);
-		SheetData sheetData = worksheet.getContents().getSheetData();
-		List<Row> rows = sheetData.getRow();
-		List<String> cellPosi = Lists.asList("B2", new String[] { "B3", "C2", "C3", "D2", "D3" });
-		for (Row row : rows) {
-			for (Cell cell : row.getC()) {
-				if (cellPosi.contains(cell.getR())) {
-					log.info("cell :{}, type: {}", cell.getR(), cell.getT());
-					cell.setT(STCellType.N);
-				}
-			}
-		}
-		ByteArrayOutputStream xlsxOutputStream2 = new ByteArrayOutputStream();
-		xlsxPackge2.save(xlsxOutputStream2);
-		xlsxDataPart2.setBinaryData(xlsxOutputStream2.toByteArray());
-		template.getParts().put(xlsxDataPart2);
-		
-		Docx4J.save(template, outPath.toFile());
-	}
+        EmbeddedPackagePart xlsxDataPart2 = (EmbeddedPackagePart) template.getParts()
+                .get(new PartName("/word/embeddings/Workbook1.xlsx"));
+        ByteArrayInputStream xlsxInputStream2 = new ByteArrayInputStream(xlsxDataPart2.getBytes());
+        SpreadsheetMLPackage xlsxPackge2 = SpreadsheetMLPackage.load(xlsxInputStream2);
+        // change data format
+        WorksheetPart worksheet = xlsxPackge2.getWorkbookPart().getWorksheet(0);
+        SheetData sheetData = worksheet.getContents().getSheetData();
+        List<Row> rows = sheetData.getRow();
+        List<String> cellPosi = Lists.asList("B2", new String[] { "B3", "C2", "C3", "D2", "D3" });
+        for (Row row : rows) {
+            for (Cell cell : row.getC()) {
+                if (cellPosi.contains(cell.getR())) {
+                    log.info("cell :{}, type: {}", cell.getR(), cell.getT());
+                    cell.setT(STCellType.N);
+                }
+            }
+        }
+        ByteArrayOutputStream xlsxOutputStream2 = new ByteArrayOutputStream();
+        xlsxPackge2.save(xlsxOutputStream2);
+        xlsxDataPart2.setBinaryData(xlsxOutputStream2.toByteArray());
+        template.getParts().put(xlsxDataPart2);
 
-	private Map<String, String> parseToMap(UserTableModel userTableModel) {
-		if (userTableModel == null) {
-			return null;
-		}
-		Map<String, String> result = new HashMap<String, String>();
-		if (!StringUtils.isEmpty(userTableModel.getClassName())) {
-			result.put("userStat.className", userTableModel.getClassName());
-		} else {
-			result.put("userStat.className", "");
-		}
-		if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
-			for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
-				UserStat userStat = userTableModel.getUserStats().get(i);
-				String titleName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "title");
-				String titleValue = userStat.getTitle();
-				result.put(titleName, titleValue);
+        Docx4J.save(template, outPath.toFile());
+    }
 
-				String userCountName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "userCount");
-				String userCountValue = userStat.getUserCount().toString();
-				result.put(userCountName, userCountValue);
+    private Map<String, String> parseToMap(UserTableModel userTableModel) {
+        if (userTableModel == null) {
+            return null;
+        }
+        Map<String, String> result = new HashMap<String, String>();
+        if (!StringUtils.isEmpty(userTableModel.getClassName())) {
+            result.put("userStat.className", userTableModel.getClassName());
+        } else {
+            result.put("userStat.className", "");
+        }
+        if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
+            for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
+                UserStat userStat = userTableModel.getUserStats().get(i);
+                String titleName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "title");
+                String titleValue = userStat.getTitle();
+                result.put(titleName, titleValue);
 
-				String perName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "per");
-				String perValue = userStat.getPer().toString();
-				result.put(perName, perValue);
-			}
-		}
+                String userCountName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "userCount");
+                String userCountValue = userStat.getUserCount().toString();
+                result.put(userCountName, userCountValue);
 
-		return result;
-	}
+                String perName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "per");
+                String perValue = userStat.getPer().toString();
+                result.put(perName, perValue);
+            }
+        }
 
-	private Map<String, Object> parseToObjMap(UserTableModel userTableModel) {
-		if (userTableModel == null) {
-			return null;
-		}
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (!StringUtils.isEmpty(userTableModel.getClassName())) {
-			result.put("userStat.className", userTableModel.getClassName());
-		} else {
-			result.put("userStat.className", "");
-		}
-		if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
-			for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
-				UserStat userStat = userTableModel.getUserStats().get(i);
-				String titleName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "title");
-				String titleValue = userStat.getTitle();
-				result.put(titleName, titleValue);
+        return result;
+    }
 
-				String userCountName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "userCount");
-				result.put(userCountName, Long.valueOf(userStat.getUserCount()));
+    private Map<String, Object> parseToObjMap(UserTableModel userTableModel) {
+        if (userTableModel == null) {
+            return null;
+        }
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (!StringUtils.isEmpty(userTableModel.getClassName())) {
+            result.put("userStat.className", userTableModel.getClassName());
+        } else {
+            result.put("userStat.className", "");
+        }
+        if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
+            for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
+                UserStat userStat = userTableModel.getUserStats().get(i);
+                String titleName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "title");
+                String titleValue = userStat.getTitle();
+                result.put(titleName, titleValue);
 
-				String perName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "per");
-				result.put(perName, Double.valueOf(userStat.getPer()));
-			}
-		}
+                String userCountName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "userCount");
+                result.put(userCountName, Long.valueOf(userStat.getUserCount()));
 
-		return result;
-	}
+                String perName = String.format("%s.%s.%s", "userStat.userStats", String.valueOf(i), "per");
+                result.put(perName, Double.valueOf(userStat.getPer()));
+            }
+        }
 
-	private Map<String, String> parseToKeyMap(UserTableModel userTableModel) {
-		if (userTableModel == null) {
-			return null;
-		}
-		Map<String, String> result = new HashMap<String, String>();
-		if (StringUtils.isEmpty(userTableModel.getClassName())) {
-			result.put("${userStat.className}", userTableModel.getClassName());
-		} else {
-			result.put("${userStat.className}", "");
-		}
-		if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
-			for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
-				UserStat userStat = userTableModel.getUserStats().get(i);
-				String titleName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "title");
-				String titleValue = userStat.getTitle();
-				result.put(titleName, titleValue);
+        return result;
+    }
 
-				String userCountName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i),
-						"userCount");
-				String userCountValue = userStat.getUserCount().toString();
-				result.put(userCountName, userCountValue);
+    private Map<String, String> parseToKeyMap(UserTableModel userTableModel) {
+        if (userTableModel == null) {
+            return null;
+        }
+        Map<String, String> result = new HashMap<String, String>();
+        if (StringUtils.isEmpty(userTableModel.getClassName())) {
+            result.put("${userStat.className}", userTableModel.getClassName());
+        } else {
+            result.put("${userStat.className}", "");
+        }
+        if (!CollectionUtils.isEmpty(userTableModel.getUserStats())) {
+            for (int i = 0; i < userTableModel.getUserStats().size(); i++) {
+                UserStat userStat = userTableModel.getUserStats().get(i);
+                String titleName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "title");
+                String titleValue = userStat.getTitle();
+                result.put(titleName, titleValue);
 
-				String perName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "per");
-				String perValue = userStat.getPer().toString();
-				result.put(perName, perValue);
-			}
-		}
+                String userCountName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i),
+                        "userCount");
+                String userCountValue = userStat.getUserCount().toString();
+                result.put(userCountName, userCountValue);
 
-		return result;
-	}
+                String perName = String.format("${%s.%s.%s}", "userStat.userStats", String.valueOf(i), "per");
+                String perValue = userStat.getPer().toString();
+                result.put(perName, perValue);
+            }
+        }
+
+        return result;
+    }
 }
