@@ -49,4 +49,16 @@ public class WordManageController {
         wordManageService.replaceChart(template, paramData);
         Docx4J.save(template, outPath.toFile());
     }
+    
+    @ApiOperation(value = "replace data")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "manageword.docx") })
+    @RequestMapping(value = "/print/chart", method = RequestMethod.GET)
+    public void printChartRelation(@RequestParam String wordName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        log.info("source word file {}", wordPath.toString());
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(wordPath.toFile());
+        wordManageService.printChartRelation(template);
+    }
 }

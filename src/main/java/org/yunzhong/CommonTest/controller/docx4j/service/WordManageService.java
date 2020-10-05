@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.docx4j.dml.CTRegularTextRun;
+import org.docx4j.dml.CTTextParagraph;
 import org.docx4j.dml.chart.CTBarChart;
 import org.docx4j.dml.chart.CTBarSer;
 import org.docx4j.dml.chart.CTNumVal;
 import org.docx4j.dml.chart.CTStrVal;
+import org.docx4j.dml.chart.CTTitle;
 import org.docx4j.model.datastorage.migration.VariablePrepare;
 import org.docx4j.openpackaging.io3.Save;
 import org.docx4j.openpackaging.packages.SpreadsheetMLPackage;
@@ -120,6 +123,7 @@ public class WordManageService {
     }
 
     private void assembleChart(Chart chart, ParamData paramMap, Integer index) {
+        CTTitle title = chart.getJaxbElement().getChart().getTitle();
         List<Object> objects = chart.getJaxbElement().getChart().getPlotArea().getAreaChartOrArea3DChartOrLineChart();
 
         for (Object object : objects) {
@@ -153,6 +157,47 @@ public class WordManageService {
                                 pt.setV(paramMap.getVariables().get(value));
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    public void printChartRelation(WordprocessingMLPackage template) throws Exception {
+        List<Relationship> maindocRelationships = template.getMainDocumentPart().getRelationshipsPart()
+                .getRelationships().getRelationship();
+        for (Relationship relationship : maindocRelationships) {
+            String target = relationship.getTarget();
+            if (relationship.getType().endsWith("/relationships/chart")) { // 图表
+                log.info("get main relation chart type {}, id {}, target {},target mode {}", relationship.getType(),
+                        relationship.getId(), target, relationship.getTargetMode());
+                Chart chart = (Chart) template.getParts().get(new PartName("/word/" + target));
+                String xml = chart.getXML();
+                log.info("get main relation chart type {}, id {}, target {},xml {}", relationship.getType(),
+                        relationship.getId(), target, xml);
+                CTTitle title = chart.getContents().getChart().getTitle();
+                if (title.getTx() != null && title.getTx().getRich() != null) {
+                    List<CTTextParagraph> pList = title.getTx().getRich().getP();
+                    if (!CollectionUtils.isEmpty(pList)) {
+                        CTTextParagraph ctTextParagraph = pList.get(0);
+                        List<Object> egTextRun = ctTextParagraph.getEGTextRun();
+                        if (!CollectionUtils.isEmpty(egTextRun)) {
+                            CTRegularTextRun object = (CTRegularTextRun) egTextRun.get(0);
+                            String t = object.getT();
+                            log.info("get main relation chart type {}, id {}, target {}, title {}",
+                                    relationship.getType(), relationship.getId(), target, t);
+                        }
+                    }
+                }
+                List<Relationship> chartRelations = chart.getRelationshipsPart().getRelationships().getRelationship();
+                String xlsxName = null;
+                for (Relationship chartRelation : chartRelations) {
+                    if (chartRelation.getType().endsWith("/relationships/package") // 图表关联的xlsx
+                            && chartRelation.getTarget().endsWith(".xlsx")) {
+                        log.info("chart xlsx {} relation {} target {} type {}", target, chartRelation.getId(),
+                                chartRelation.getTarget(), chartRelation.getType());
+                        xlsxName = chartRelation.getTarget().replaceFirst("../", "/word/");// "/word/embeddings/Workbook1.xlsx"
+                        log.info("chart xlsx {} xlsxName {}", target, xlsxName);
                     }
                 }
             }
