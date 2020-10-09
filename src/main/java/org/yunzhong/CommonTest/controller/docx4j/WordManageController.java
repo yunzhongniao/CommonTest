@@ -49,8 +49,8 @@ public class WordManageController {
         wordManageService.replaceChart(template, paramData);
         Docx4J.save(template, outPath.toFile());
     }
-    
-    @ApiOperation(value = "replace data")
+
+    @ApiOperation(value = "print docx structure")
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "manageword.docx") })
     @RequestMapping(value = "/print/chart", method = RequestMethod.GET)
