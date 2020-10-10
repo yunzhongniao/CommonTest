@@ -25,14 +25,34 @@ public class TemplateWordManageController {
 
     @ApiOperation(value = "replace data")
     @ApiImplicitParams({
-            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "poitlmanageword.docx"),
-            @ApiImplicitParam(dataType = "String", name = "jsonName", required = true, defaultValue = "replaceTable.json") })
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTablepoitl.docx") })
     @RequestMapping(value = "/replace/data", method = RequestMethod.GET)
-    public void replaceData(@RequestParam String wordName, @RequestParam String jsonName) throws Exception {
+    public void replaceData(@RequestParam String wordName) throws Exception {
         URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
         Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
-        Path paramPath = Paths.get(parentPathURL.getPath(), jsonName);
         Path outPath = Paths.get(parentPathURL.getPath(), "poitl-manage-data-" + wordName);
-        wordManageService.replaceData(wordPath, paramPath, outPath);
+        wordManageService.replaceData(wordPath, outPath);
+    }
+
+    @ApiOperation(value = "replace chart data")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTablepoitl.docx") })
+    @RequestMapping(value = "/replace/chart", method = RequestMethod.GET)
+    public void replaceChart(@RequestParam String wordName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "poitl-replace-chart-" + wordName);
+        wordManageService.replaceChart(wordPath, outPath);
+    }
+
+    @ApiOperation(value = "replace table data")
+    @ApiImplicitParams({
+            @ApiImplicitParam(dataType = "String", name = "wordName", required = true, defaultValue = "replaceTablepoitl.docx") })
+    @RequestMapping(value = "/replace/table", method = RequestMethod.GET)
+    public void replaceTable(@RequestParam String wordName) throws Exception {
+        URL parentPathURL = this.getClass().getClassLoader().getResource("doc-templates");
+        Path wordPath = Paths.get(parentPathURL.getPath(), wordName);
+        Path outPath = Paths.get(parentPathURL.getPath(), "poitl-replace-table-" + wordName);
+        wordManageService.replaceTable(wordPath, outPath);
     }
 }
