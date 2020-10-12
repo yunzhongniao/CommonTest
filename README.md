@@ -22,9 +22,9 @@ wps设置：点击图表，右侧出现的浮框选择"设置图表区域格式"
 
 ## 6 load property source
 ### 变量类型
-sql-single, sql-obj, sql-multi, java, SpEL  
+类型包括：sql-single, sql-obj, sql-multi, static, SpEL  
 sql-single:单个返回结果的单个数据。  例如当前日期。  
 sql-obj：单行返回结果。例如学生信息，列：idnum，name，sex，age，...。可以通过param.property访问。  
 sql-multi：多行返回结果。表格，图表的数据格式。  
-java：java常量  
+static: 常量  
 SpEL: Spring Expression Language   
