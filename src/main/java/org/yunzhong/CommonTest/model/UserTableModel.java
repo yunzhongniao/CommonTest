@@ -2,6 +2,9 @@ package org.yunzhong.CommonTest.model;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class UserTableModel {
 
     public static class User {
@@ -71,29 +74,5 @@ public class UserTableModel {
     private List<User> users;
 
     private List<UserStat> userStats;
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public List<UserStat> getUserStats() {
-        return userStats;
-    }
-
-    public void setUserStats(List<UserStat> userStats) {
-        this.userStats = userStats;
-    }
 
 }
