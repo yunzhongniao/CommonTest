@@ -48,3 +48,19 @@ assert方法：org.junit.jupiter.api.Assertions
 
 ## 8 文件操作
 
+## 9 python invoke
+可以依赖jpython，直接在java中运行python脚本,需要引入jpython。但是这种方法无法调用系统中pip安装的库。  
+
+```xml
+<dependency>
+    <groupId>org.python</groupId>
+    <artifactId>jython-standalone</artifactId>
+    <version>2.7.0</version>
+</dependency>
+```
+推荐直接用java的Runtime.getRuntime()：  
+org.yunzhong.CommonTest.util.PythonCommonInvoker
+
+## 10 shell
+### how to use command ip(shell中的ip命令，而不是平时说的ip地址)
+ip命令入门
