@@ -68,6 +68,8 @@ assert方法：org.junit.jupiter.api.Assertions
 
 
 ## 8 文件操作
+### 将流转成String的几种方法
+org.yunzhong.CommonTest.util.stream.InputStreamToString
 
 ## 9 python invoke
 可以依赖jpython，直接在java中运行python脚本,需要引入jpython。但是这种方法无法调用系统中pip安装的库。  
