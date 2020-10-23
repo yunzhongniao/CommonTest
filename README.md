@@ -83,5 +83,6 @@ assert方法：org.junit.jupiter.api.Assertions
 org.yunzhong.CommonTest.util.PythonCommonInvoker
 
 ## 10 shell
-### how to use command ip(shell中的ip命令，而不是平时说的ip地址)
-ip命令入门
+### how to use command ip
+shell中的ip命令，而不是平时说的ip地址。
+ip命令入门：shell/printIP.sh
