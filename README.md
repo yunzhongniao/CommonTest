@@ -1,6 +1,23 @@
 # CommonTest
 代码片段
 <!-- common-test-menu -->
+- [Content](#content)
+  * [1 spring boot](#1-spring-boot)
+  * [2 swagger ui](#2-swagger-ui)
+  * [3 word处理](#3-word--)
+    + [docx4j](#docx4j)
+    + [poi](#poi)
+    + [poi-tpl](#poi-tpl)
+      - [chart 设置关联信息](#chart-------)
+  * [4 load property source](#4-load-property-source)
+    + [变量类型](#----)
+  * [5 optional](#5-optional)
+  * [6 Junit5](#6-junit5)
+  * [7 mybatis](#7-mybatis)
+  * [8 文件操作](#8-----)
+  * [9 python invoke](#9-python-invoke)
+  * [10 shell](#10-shell)
+    + [how to use command ip](#how-to-use-command-ip)
 <!-- common-test-menu -->
 # Content
 
