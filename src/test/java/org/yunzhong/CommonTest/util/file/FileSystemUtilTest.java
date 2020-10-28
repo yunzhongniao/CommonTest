@@ -33,6 +33,16 @@ class FileSystemUtilTest {
 		path = Paths.get(path.toString(), "temp");
 		FileSystemUtil.createDirectory(path.toString(), null);
 	}
+	
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	void testprintDirectory() throws Exception {
+		URL resource = FileSystemUtilTest.class.getClassLoader().getResource("file-root");
+		Path path = Paths.get(resource.toURI());
+		FileSystemUtil.printDirectory(path.toString(), null);
+	}
 
 	/**
 	 * @throws Exception

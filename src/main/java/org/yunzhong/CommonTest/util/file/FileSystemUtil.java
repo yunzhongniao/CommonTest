@@ -1,6 +1,7 @@
 package org.yunzhong.CommonTest.util.file;
 
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -74,6 +75,39 @@ public class FileSystemUtil {
 		});
 	}
 
+	/**
+	 * @param rootPath
+	 * @param glob
+	 * @throws IOException
+	 */
+	public static void printDirectory(String rootPath, String glob) throws IOException {
+		Path path = Paths.get(rootPath);
+		if (Files.notExists(path)) {
+			log.warn("there is no path {}", rootPath);
+			return;
+		}
+		DirectoryStream<Path> newDirectoryStream = null;
+		try {
+			if (glob != null) {
+				newDirectoryStream = Files.newDirectoryStream(path, glob);
+			} else {
+				newDirectoryStream = Files.newDirectoryStream(path);
+			}
+			for (Path directory : newDirectoryStream) {
+				System.out.println("path:" + directory.toString());
+			}
+		} finally {
+			if (newDirectoryStream != null) {
+				newDirectoryStream.close();
+			}
+		}
+	}
+
+	/**
+	 * @param rootPath
+	 * @param attr
+	 * @throws Exception
+	 */
 	public static void createDirectory(String rootPath, String attr) throws Exception {
 		Path createDirectory = null;
 		if (StringUtils.isEmpty(attr)) {
@@ -89,6 +123,12 @@ public class FileSystemUtil {
 			throw new Exception();
 		}
 	}
+
+	/**
+	 * @param rootPath
+	 * @param attr
+	 * @throws Exception
+	 */
 	public static void createDirectories(String rootPath, String attr) throws Exception {
 		Path createDirectory = null;
 		if (StringUtils.isEmpty(attr)) {
