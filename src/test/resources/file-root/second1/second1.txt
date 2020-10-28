@@ -1,0 +1,63 @@
+package org.yunzhong.CommonTest.util.file;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+/**
+ * @author yunzhong
+ *
+ */
+public class FileSystemUtil {
+
+	public void printSmallFile(String filePath) throws IOException {
+		Path path = Paths.get(filePath);
+		System.out.println("file content: " + Files.readString(path));
+	}
+
+	public void printSmallFileByLine(String filePath) throws IOException {
+		Path path = Paths.get(filePath);
+		List<String> readAllLines = Files.readAllLines(path);
+		for (String line : readAllLines) {
+			System.out.println("file content: " + line);
+		}
+	}
+
+	public void printFileByStream(String filePath) throws IOException {
+		Path path = Paths.get(filePath);
+		try (BufferedReader bufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+			String readLine = bufferedReader.readLine();
+			System.out.println("contents:" + readLine);
+		}
+	}
+
+	public void printAsync(String filePath) throws IOException, InterruptedException, ExecutionException {
+		Path file = Paths.get(filePath);
+		try (AsynchronousFileChannel channel = AsynchronousFileChannel.open(file)) {
+			// 从jdk7开始，支持数字中下划线，增强数字的可读性
+			//ByteBuffer buffer = ByteBuffer.allocate(4_000);
+			ByteBuffer buffer = ByteBuffer.allocate(4);
+			Future<Integer> result = channel.read(buffer, 0);
+			while (!result.isDone()) {
+				System.out.println("waiting for data.");
+			}
+			System.out.println("Reading done: " + result.isDone());
+			System.out.println("Bytes read from file: " + result.get());
+			buffer.flip();
+			System.out.print("Buffer contents: ");
+			while (buffer.hasRemaining()) {
+				System.out.print((char) buffer.get());
+			}
+			System.out.println(" ");
+			buffer.clear();
+		}
+	}
+}

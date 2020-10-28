@@ -44,8 +44,19 @@ Files.createDirectories则是会将路径上不存在的文件夹都创建出来
 可以采用Files.walkFileTree进行删除。也可以通过递归的方式删除文件夹。  
 
 ### 文件操作
-增删改查
+实现类：FileSystemUtil  
+#### 小文件操作
+一次性读取到内存。  
+
+#### 异步文件操作
+AsynchronousFileChannel进行文件的读写。实现起来很复杂，一般不要用了。  
+
 ## classpath文件操作
+classpath可以通过classloader进行定位。
+
+```java
+	FolderSystemUtilTest.class.getClassLoader().getResource("file-root");
+```
 
 # jar内部文件加载
 
