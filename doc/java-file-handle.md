@@ -29,6 +29,29 @@ java demo: URITester.java
 是URI的一个子集，一般用于网络上。  
 java demo:URLTester.java  
 
+#### Path路径拼接
+
+URL转成Path：
+
+```java
+    Path path = Paths.get(resource.toURI());
+```
+URI可以直接作为参数传递给Path。  
+Path还可以拼接多级路径，不需要用户处理"/","\"等问题。  
+
+```java
+    @Test
+    public void testAppend() {
+        System.out.println(Paths.get("D:/temp", "hello/world", "files").toString());
+        System.out.println(Paths.get("D:/temp", "hello\\world", "files").toString());
+        System.out.println(Paths.get("D:/temp", "hello", "world", "files").toString());
+        
+        Path path = Paths.get("D:/temp");
+        Path resolve = path.resolve("hello").resolve("world").resolve("files");
+        System.out.println(resolve.toString());
+    }
+```
+
 ### 文件夹操作
 FileSystemUtil包含了所有的文件操作demo。
 - 文件夹下的遍历操作
@@ -56,6 +79,12 @@ classpath可以通过classloader进行定位。
 
 ```java
 	FolderSystemUtilTest.class.getClassLoader().getResource("file-root");
+```
+定位之后，可以转成Path。
+
+```java
+        URL resource = FileSystemUtilTest.class.getClassLoader().getResource("file-root/second1/second1.txt");
+        Path path = Paths.get(resource.toURI());
 ```
 
 # jar内部文件加载
