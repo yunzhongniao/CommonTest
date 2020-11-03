@@ -88,3 +88,10 @@ org.yunzhong.CommonTest.util.PythonCommonInvoker
 ### how to use command ip
 shell中的ip命令，而不是平时说的ip地址。
 ip命令入门：shell/printIP.sh
+
+## 11 多线程
+ExecutorManager
+
+### 线程池管理
+- 尽量不要使用Executors建立线程池。
+- 线程池的各个概念，参考ExecutorManagerDemo
