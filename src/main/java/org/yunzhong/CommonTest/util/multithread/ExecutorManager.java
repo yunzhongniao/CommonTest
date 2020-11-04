@@ -46,13 +46,7 @@ public class ExecutorManager {
 
         @Override
         public Thread newThread(Runnable r) {
-            int number = atomicInteger.getAndUpdate(p -> {
-                if (p >= Integer.MAX_VALUE) {
-                    return 0;
-                } else {
-                    return p;
-                }
-            });
+            int number = atomicInteger.getAndUpdate(p -> (p + 1) % Integer.MAX_VALUE);
             return new Thread(r, ThreadFactoryN.class.getSimpleName() + number);
         }
 
