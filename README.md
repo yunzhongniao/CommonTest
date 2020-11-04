@@ -18,7 +18,11 @@
   * [9 python invoke](#9-python-invoke)
   * [10 shell](#10-shell)
     + [how to use command ip](#how-to-use-command-ip)
+  * [11 多线程](#11-多线程)
+    + [线程池管理](#线程池管理)
+ 
 <!-- common-test-menu -->
+
 # Content
 目录生成地址：https://ecotrust-canada.github.io/markdown-toc/
 ## 1 spring boot 
@@ -95,3 +99,4 @@ ExecutorManager
 ### 线程池管理
 - 尽量不要使用Executors建立线程池。
 - 线程池的各个概念，参考ExecutorManagerDemo
+- 创建的线程要赋予有意义的名字。
