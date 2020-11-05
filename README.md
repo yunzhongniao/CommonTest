@@ -20,6 +20,7 @@
     + [how to use command ip](#how-to-use-command-ip)
   * [11 多线程](#11-多线程)
     + [线程池管理](#线程池管理)
+    + [ThreadPoolFactory](#ThreadPoolFactory)
  
 <!-- common-test-menu -->
 
@@ -100,3 +101,6 @@ ExecutorManager
 - 尽量不要使用Executors建立线程池。
 - 线程池的各个概念，参考ExecutorManagerDemo
 - 创建的线程要赋予有意义的名字。
+### ThreadPoolFactory
+- 环境需要多个线程池。不同的业务用不同的线程池管理，防止互相之间的影响。
+- 整体线程信息输出。线程总数，等待队列总数。
