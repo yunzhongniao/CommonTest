@@ -21,7 +21,10 @@
   * [11 多线程](#11-多线程)
     + [线程池管理](#线程池管理)
     + [ThreadPoolFactory](#ThreadPoolFactory)
- 
+  * [12 集合](#12-集合)
+    + [list array转换](#list-array转换)
+    + [线程安全的集合](#线程安全的集合)
+
 <!-- common-test-menu -->
 
 # Content
@@ -108,3 +111,9 @@ ExecutorManager
 - 线程池的创建。每个线程池都有自己的名字，其下的线程也会使用这个名字，因此要使用英文。  
 系统有默认的线程池，名称为default_pool，用户可以直接使用。  
 - 线程池的配置。系统默认采用配置文件中的参数。用户也可以自己指定配置参数创建线程池。
+
+## 12 集合
+### list array转换
+CollectionUtils
+### 线程安全的集合
+ConcurrentCollections
