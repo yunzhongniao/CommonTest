@@ -2,6 +2,7 @@ package org.yunzhong.CommonTest.util.collection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,5 +49,15 @@ public class CollectionUtils {
      */
     public static List<String> toListStream(String[] array) {
         return Arrays.stream(array).collect(Collectors.toList());
+    }
+
+    /**
+     * @param array
+     * @return
+     */
+    public static List<String> addAll(String[] array) {
+        ArrayList<String> arrayList = new ArrayList<String>();
+        Collections.addAll(arrayList, array);
+        return arrayList;
     }
 }
