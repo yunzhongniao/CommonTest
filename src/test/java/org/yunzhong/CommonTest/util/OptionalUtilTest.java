@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -124,6 +127,17 @@ public class OptionalUtilTest {
             String result = OptionalUtil.ofNullable(model).getProperty(TestModel::getModel)
                     .getProperty(TestModel::getId).get();
             assertNull(result);
+        }
+
+        @Test
+        @DisplayName("test Optional map")
+        void testOptional() {
+            TestModel model = new TestModel();
+            model.setId("id1");
+            model.setName("name1");
+            NoSuchElementException assertThrows = assertThrows(NoSuchElementException.class,
+                    () -> Optional.ofNullable(model).map(m -> m.getModel()).map(t -> t.getName()).get());
+            assertNotNull(assertThrows);
         }
     }
 
