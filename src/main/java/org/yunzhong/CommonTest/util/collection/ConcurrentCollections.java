@@ -15,31 +15,63 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class ConcurrentCollections {
 
     /**
-     *  线程安全的 HashMap
+     * 线程安全的 HashMap
      */
-    private ConcurrentHashMap<String, String> concurrentHashMap;
-    
+    final static private ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<String, String>();
+
     /**
      * 线程安全的 List。适用于多读少写的情形。
      */
-    private CopyOnWriteArrayList<String> copyOnWriteArrayList;
-    
+    final static private CopyOnWriteArrayList<String> copyOnWriteArrayList = new CopyOnWriteArrayList<String>();
+
     /**
      * 高效的并发队列，使用链表实现。非阻塞队列。
      */
-    private ConcurrentLinkedQueue<String> concurrentLinkedQueue;
-    
-    private ConcurrentSkipListMap<String, String> concurrentSkipListMap;
-    
+    final static private ConcurrentLinkedQueue<String> concurrentLinkedQueue = new ConcurrentLinkedQueue<String>();
+
+    final static private ConcurrentSkipListMap<String, String> concurrentSkipListMap = new ConcurrentSkipListMap<String, String>();
+
     /**
      * 数组实现的，固定容量的阻塞队列。
      */
-    private ArrayBlockingQueue<String> arrayBlockingQueue;
-    
-    private LinkedBlockingQueue<String> linkedBlockingQueue;
-    
+    final static private ArrayBlockingQueue<String> arrayBlockingQueue = new ArrayBlockingQueue<String>(100);
+
+    /**
+     * LinkedBlockingQueue默认容量Integer.MAX_VALUE,可能发生内存耗尽。指定max
+     */
+    final static private LinkedBlockingQueue<String> linkedBlockingQueue = new LinkedBlockingQueue<String>(100);
+
     /**
      * 支持优先级的无界阻塞队列。
      */
-    private PriorityBlockingQueue<String> priorityBlockingQueue;
+    final static private PriorityBlockingQueue<String> priorityBlockingQueue = new PriorityBlockingQueue<String>();
+
+    public static ConcurrentHashMap<String, String> getConcurrentHashMap() {
+        return concurrentHashMap;
+    }
+
+    public static CopyOnWriteArrayList<String> getCopyOnWriteArrayList() {
+        return copyOnWriteArrayList;
+    }
+
+    public static ConcurrentLinkedQueue<String> getConcurrentLinkedQueue() {
+        return concurrentLinkedQueue;
+    }
+
+    public static ConcurrentSkipListMap<String, String> getConcurrentSkipListMap() {
+        return concurrentSkipListMap;
+    }
+
+    public static ArrayBlockingQueue<String> getArrayBlockingQueue() {
+        return arrayBlockingQueue;
+    }
+
+    public static LinkedBlockingQueue<String> getLinkedBlockingQueue() {
+        return linkedBlockingQueue;
+    }
+
+    public static PriorityBlockingQueue<String> getPriorityBlockingQueue() {
+        return priorityBlockingQueue;
+    }
+
 }
