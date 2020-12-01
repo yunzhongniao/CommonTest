@@ -1,4 +1,4 @@
-package org.yunzhong.CommonTest;
+package org.yunzhong.CommonTest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
