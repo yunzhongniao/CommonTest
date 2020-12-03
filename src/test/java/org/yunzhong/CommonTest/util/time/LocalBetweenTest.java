@@ -26,6 +26,9 @@ public class LocalBetweenTest {
         System.out.println(between1);
     }
 
+    /**
+     * 日期之间相差多少秒
+     */
     @Test
     public void testBetweenSecond() {
         LocalDateTime startDate = LocalDateTime.parse("2019-12-02T11:11:11.11");
@@ -36,6 +39,9 @@ public class LocalBetweenTest {
         System.out.println("between seconds:" + between);
     }
 
+    /**
+     * 日期之间相差多少纳秒
+     */
     @Test
     public void testBetweenNanoSecond() {
         LocalDateTime startDate = LocalDateTime.parse("2019-12-02T11:11:11.01");
@@ -59,6 +65,9 @@ public class LocalBetweenTest {
         System.out.println(date);
     }
 
+    /**
+     * 增加多少天
+     */
     @Test
     public void testMinusDay() {
         LocalDateTime date = LocalDateTime.now();
@@ -66,6 +75,16 @@ public class LocalBetweenTest {
         System.out.println(minusDays);
     }
 
+    /**
+     * 减少多少天
+     */
+    @Test
+    public void testPlusDay() {
+        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime plusDays = date.plusDays(10);
+        System.out.println(plusDays);
+    }
+    
     @Test
     public void testMinusYear() {
         LocalDateTime date = LocalDateTime.now();
