@@ -12,32 +12,32 @@ import org.junit.jupiter.api.Test;
  * @author yunzhong
  *
  */
-class DateUtilTest {
+class DateConvertUtilTest {
 
     @Test
     void testasLocalDate() {
-        LocalDate asLocalDate = DateUtil.asLocalDate(new Date());
+        LocalDate asLocalDate = DateConvertUtil.asLocalDate(new Date());
         assertNotNull(asLocalDate);
         System.out.println(asLocalDate);
     }
 
     @Test
     void testasLocalDateTime() {
-        LocalDateTime asLocalDate = DateUtil.asLocalDateTime(new Date());
+        LocalDateTime asLocalDate = DateConvertUtil.asLocalDateTime(new Date());
         assertNotNull(asLocalDate);
         System.out.println(asLocalDate);
     }
 
     @Test
     void testAsDate() {
-        Date asDate = DateUtil.asDate(LocalDate.now());
+        Date asDate = DateConvertUtil.asDate(LocalDate.now());
         assertNotNull(asDate);
         System.out.println(asDate);
     }
 
     @Test
     void testAsLocalDateTime() {
-        Date asDate = DateUtil.asDate(LocalDateTime.now());
+        Date asDate = DateConvertUtil.asDate(LocalDateTime.now());
         assertNotNull(asDate);
         System.out.println(asDate);
     }

@@ -10,7 +10,7 @@ import java.util.Date;
  * @author yunzhong
  *
  */
-public class DateUtil {
+public class DateConvertUtil {
 
     /**
      * 忽略时间，只有日期
