@@ -7,6 +7,10 @@ import java.nio.charset.Charset;
 import org.springframework.core.io.ClassPathResource;
 import org.yunzhong.CommonTest.util.stream.InputStreamToString;
 
+/**
+ * @author yunzhong
+ *
+ */
 public class JarFileUtil {
 
     public static void printClassloaderPath(Class<?> clazz) {
