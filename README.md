@@ -24,6 +24,8 @@
   * [12 集合](#12-集合)
     + [list array转换](#list-array转换)
     + [线程安全的集合](#线程安全的集合)
+  * [13 JDK时间处理](#13-JDK时间处理)
+
 
 <!-- common-test-menu -->
 
@@ -126,4 +128,7 @@ ConcurrentCollections
 * - poll(time):取走BlockingQueue里排在首位的对象,若不能立即取出,则可以等time参数规定的时间, 取不到时返回null;
 * - poll(long timeout, TimeUnit unit)：从BlockingQueue取出一个队首的对象，如果在指定时间内，队列一旦有数据可取，则立即返回队列中的数据。否则知道时间超时还没有数据可取，返回失败。  
 * - take():取走BlockingQueue里排在首位的对象,若BlockingQueue为空,阻断进入等待状态直到BlockingQueue有新的数据被加入; 
-* - drainTo():一次性从BlockingQueue获取所有可用的数据对象（还可以指定获取数据的个数），通过该方法，可以提升获取数据效率；不需要多次分批加锁或释放锁。  
+* - drainTo():一次性从BlockingQueue获取所有可用的数据对象（还可以指定获取数据的个数），通过该方法，可以提升获取数据效率；不需要多次分批加锁或释放锁。 
+
+## 13 JDK时间处理
+ 详情见doc/JDK-time-interface.md
