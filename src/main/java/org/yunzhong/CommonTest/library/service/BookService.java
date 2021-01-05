@@ -7,7 +7,7 @@ import org.yunzhong.CommonTest.library.dao.BookMapper;
 @Service
 public class BookService {
 
-    @Autowired
+//    @Autowired
     private BookMapper bookMapper;
     
     

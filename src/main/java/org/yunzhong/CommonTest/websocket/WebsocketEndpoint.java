@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ServerEndpoint(value = "/websocket/{category)/userName}")
+@ServerEndpoint(value = "/websocket/{category}/{userName}")
 @Component
 @Scope
 public class WebsocketEndpoint {

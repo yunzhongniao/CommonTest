@@ -1,7 +1,8 @@
 package org.yunzhong.CommonTest.util.lifecycle;
 
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,16 +13,16 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-public class BeanLifecycle implements InitializingBean, DisposableBean {
+public class MyBeanLifecycleJSR {
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        System.out.println("InitializingBean afterPropertiesSet.");
+        System.out.println("jsr bean lifecycle: @PostConstruct.");
     }
 
-    @Override
+    @PreDestroy
     public void destroy() throws Exception {
-        System.out.println("DisposableBean destroy.");
+        System.out.println("jsr bean lifecycle: @PreDestroy.");
     }
 
 }
