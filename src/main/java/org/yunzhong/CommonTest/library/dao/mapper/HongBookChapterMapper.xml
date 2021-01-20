@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="org.yunzhong.CommonTest.library.model.HongBookChapter">
     <result column="book_id" jdbcType="BIGINT" property="bookId" />
     <result column="chapter_id" jdbcType="VARCHAR" property="chapterId" />
-    <result column="chapter_detail" jdbcType="OTHER" property="chapterDetail" />
+    <result column="chapter_detail" jdbcType="VARCHAR" property="chapterDetail" />
   </resultMap>
   <insert id="insert" parameterType="org.yunzhong.CommonTest.library.model.HongBookChapter">
     insert into public.hong_book_chapter (book_id, chapter_id, chapter_detail
       )
-    values (#{bookId,jdbcType=BIGINT}, #{chapterId,jdbcType=VARCHAR}, #{chapterDetail,jdbcType=OTHER}
+    values (#{bookId,jdbcType=BIGINT}, #{chapterId,jdbcType=VARCHAR}, #{chapterDetail,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="org.yunzhong.CommonTest.library.model.HongBookChapter">
@@ -33,7 +33,7 @@
         #{chapterId,jdbcType=VARCHAR},
       </if>
       <if test="chapterDetail != null">
-        #{chapterDetail,jdbcType=OTHER},
+        #{chapterDetail,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

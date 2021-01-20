@@ -3,8 +3,8 @@ package org.yunzhong.CommonTest.library.model;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 public class HongBook {
     private Long id;
 

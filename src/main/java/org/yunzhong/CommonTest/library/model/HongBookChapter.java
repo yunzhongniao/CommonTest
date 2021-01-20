@@ -5,7 +5,7 @@ public class HongBookChapter {
 
     private String chapterId;
 
-    private Object chapterDetail;
+    private String chapterDetail;
 
     public Long getBookId() {
         return bookId;
@@ -23,11 +23,11 @@ public class HongBookChapter {
         this.chapterId = chapterId;
     }
 
-    public Object getChapterDetail() {
+    public String getChapterDetail() {
         return chapterDetail;
     }
 
-    public void setChapterDetail(Object chapterDetail) {
+    public void setChapterDetail(String chapterDetail) {
         this.chapterDetail = chapterDetail;
     }
 }
