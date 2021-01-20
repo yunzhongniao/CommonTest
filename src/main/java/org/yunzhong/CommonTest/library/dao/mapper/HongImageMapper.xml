@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yunzhong.CommonTest.library.dao.HongImageMapper">
+  <resultMap id="BaseResultMap" type="org.yunzhong.CommonTest.library.model.HongImage">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="image_desc" jdbcType="VARCHAR" property="imageDesc" />
+    <result column="image_path" jdbcType="VARCHAR" property="imagePath" />
+    <result column="create_user" jdbcType="BIGINT" property="createUser" />
+  </resultMap>
+  <insert id="insert" parameterType="org.yunzhong.CommonTest.library.model.HongImage">
+    insert into public.hong_image (id, image_desc, image_path, 
+      create_user)
+    values (#{id,jdbcType=BIGINT}, #{imageDesc,jdbcType=VARCHAR}, #{imagePath,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="org.yunzhong.CommonTest.library.model.HongImage">
+    insert into public.hong_image
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="imageDesc != null">
+        image_desc,
+      </if>
+      <if test="imagePath != null">
+        image_path,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="imageDesc != null">
+        #{imageDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="imagePath != null">
+        #{imagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

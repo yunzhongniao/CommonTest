@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yunzhong.CommonTest.library.dao.HongBookMapper">
+  <resultMap id="BaseResultMap" type="org.yunzhong.CommonTest.library.model.HongBook">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+    <result column="book_name_en" jdbcType="VARCHAR" property="bookNameEn" />
+    <result column="book_abstract" jdbcType="VARCHAR" property="bookAbstract" />
+    <result column="book_content" jdbcType="OTHER" property="bookContent" />
+  </resultMap>
+  <insert id="insert" parameterType="org.yunzhong.CommonTest.library.model.HongBook">
+    insert into public.hong_book (id, book_name, book_name_en, 
+      book_abstract, book_content)
+    values (#{id,jdbcType=BIGINT}, #{bookName,jdbcType=VARCHAR}, #{bookNameEn,jdbcType=VARCHAR}, 
+      #{bookAbstract,jdbcType=VARCHAR}, #{bookContent,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.yunzhong.CommonTest.library.model.HongBook">
+    insert into public.hong_book
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bookName != null">
+        book_name,
+      </if>
+      <if test="bookNameEn != null">
+        book_name_en,
+      </if>
+      <if test="bookAbstract != null">
+        book_abstract,
+      </if>
+      <if test="bookContent != null">
+        book_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="bookName != null">
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookNameEn != null">
+        #{bookNameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="bookAbstract != null">
+        #{bookAbstract,jdbcType=VARCHAR},
+      </if>
+      <if test="bookContent != null">
+        #{bookContent,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

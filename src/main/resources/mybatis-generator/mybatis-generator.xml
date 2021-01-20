@@ -5,10 +5,11 @@ Configuration 1.0//EN"
 <generatorConfiguration>
 
   <!-- targetRuntime: 1 MyBatis3DynamicSql（默认值）。忽略defaultModelType的设置，采用FLAT，主键不会抽取成独立的一个类。 
-    忽略javaClientGenerator的type配置，生成注解方式的sql，不会生成xml。 2 MyBatis3。会有by 
-    example的方法生成 3 MyBatis3Simple。没有by example的方法生成 -->
+    忽略javaClientGenerator的type配置，生成注解方式的sql，不会生成xml。 2 MyBatis3。会有by example的方法生成 
+    3 MyBatis3Simple。没有by example的方法生成 -->
   <!-- defaultModelType: 1 conditional（默认值），如果主键是多个字段，将会抽取成单独的一个类。2 flat，一个表对应一个类，包含所有属性。 
     3 hierarchical，主键会抽取成一个单独的类。 -->
+  <!-- mvn mybatis-generator:generate -Dmybatis.generator.overwrite=true -->
   <context id="book" targetRuntime="MyBatis3"
     defaultModelType="flat">
 
@@ -17,7 +18,7 @@ Configuration 1.0//EN"
     </commentGenerator>
 
     <jdbcConnection
-      connectionURL="jdbc:postgresql://localhost:5432/common-test?serverTimezone=UTC"
+      connectionURL="jdbc:postgresql://localhost:5432/hongxiutianxiang?serverTimezone=UTC"
       password="yunzhong" userId="postgres"
       driverClass="org.postgresql.Driver" />
 
@@ -34,10 +35,31 @@ Configuration 1.0//EN"
     <javaClientGenerator
       targetPackage="org.yunzhong.CommonTest.library.dao"
       targetProject="src/main/java" type="XMLMAPPER" />
-    <table schema="public" tableName="book"
-      domainObjectName="Book" enableCountByExample="false"
+
+    <table schema="public" tableName="sys_user"
+      domainObjectName="SysUser" enableCountByExample="false"
       enableUpdateByExample="false" enableDeleteByExample="false"
-      enableSelectByExample="false"/>
+      enableSelectByExample="false" />
+    <table schema="public" tableName="sys_dept"
+      domainObjectName="SysDept" enableCountByExample="false"
+      enableUpdateByExample="false" enableDeleteByExample="false"
+      enableSelectByExample="false" />
+    <table schema="public" tableName="hong_book"
+      domainObjectName="HongBook" enableCountByExample="false"
+      enableUpdateByExample="false" enableDeleteByExample="false"
+      enableSelectByExample="false" />
+    <table schema="public" tableName="hong_book_chapter"
+      domainObjectName="HongBookChapter" enableCountByExample="false"
+      enableUpdateByExample="false" enableDeleteByExample="false"
+      enableSelectByExample="false" />
+    <table schema="public" tableName="hong_book_read_his"
+      domainObjectName="HongBookReadHis" enableCountByExample="false"
+      enableUpdateByExample="false" enableDeleteByExample="false"
+      enableSelectByExample="false" />
+    <table schema="public" tableName="hong_image"
+      domainObjectName="HongImage" enableCountByExample="false"
+      enableUpdateByExample="false" enableDeleteByExample="false"
+      enableSelectByExample="false" />
   </context>
 
 </generatorConfiguration>

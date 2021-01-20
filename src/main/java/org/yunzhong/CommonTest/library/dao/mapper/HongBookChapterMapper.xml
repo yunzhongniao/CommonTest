@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yunzhong.CommonTest.library.dao.HongBookChapterMapper">
+  <resultMap id="BaseResultMap" type="org.yunzhong.CommonTest.library.model.HongBookChapter">
+    <result column="book_id" jdbcType="BIGINT" property="bookId" />
+    <result column="chapter_id" jdbcType="VARCHAR" property="chapterId" />
+    <result column="chapter_detail" jdbcType="OTHER" property="chapterDetail" />
+  </resultMap>
+  <insert id="insert" parameterType="org.yunzhong.CommonTest.library.model.HongBookChapter">
+    insert into public.hong_book_chapter (book_id, chapter_id, chapter_detail
+      )
+    values (#{bookId,jdbcType=BIGINT}, #{chapterId,jdbcType=VARCHAR}, #{chapterDetail,jdbcType=OTHER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.yunzhong.CommonTest.library.model.HongBookChapter">
+    insert into public.hong_book_chapter
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        book_id,
+      </if>
+      <if test="chapterId != null">
+        chapter_id,
+      </if>
+      <if test="chapterDetail != null">
+        chapter_detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        #{bookId,jdbcType=BIGINT},
+      </if>
+      <if test="chapterId != null">
+        #{chapterId,jdbcType=VARCHAR},
+      </if>
+      <if test="chapterDetail != null">
+        #{chapterDetail,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

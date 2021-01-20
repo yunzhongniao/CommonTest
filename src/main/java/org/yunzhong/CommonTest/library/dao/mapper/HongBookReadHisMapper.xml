@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yunzhong.CommonTest.library.dao.HongBookReadHisMapper">
+  <resultMap id="BaseResultMap" type="org.yunzhong.CommonTest.library.model.HongBookReadHis">
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="book_id" jdbcType="BIGINT" property="bookId" />
+    <result column="book_chapter_id" jdbcType="BIGINT" property="bookChapterId" />
+    <result column="read_time" jdbcType="TIMESTAMP" property="readTime" />
+  </resultMap>
+  <insert id="insert" parameterType="org.yunzhong.CommonTest.library.model.HongBookReadHis">
+    insert into public.hong_book_read_his (user_id, book_id, book_chapter_id, 
+      read_time)
+    values (#{userId,jdbcType=BIGINT}, #{bookId,jdbcType=BIGINT}, #{bookChapterId,jdbcType=BIGINT}, 
+      #{readTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.yunzhong.CommonTest.library.model.HongBookReadHis">
+    insert into public.hong_book_read_his
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="bookId != null">
+        book_id,
+      </if>
+      <if test="bookChapterId != null">
+        book_chapter_id,
+      </if>
+      <if test="readTime != null">
+        read_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="bookId != null">
+        #{bookId,jdbcType=BIGINT},
+      </if>
+      <if test="bookChapterId != null">
+        #{bookChapterId,jdbcType=BIGINT},
+      </if>
+      <if test="readTime != null">
+        #{readTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>
