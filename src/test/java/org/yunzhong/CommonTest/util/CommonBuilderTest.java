@@ -61,17 +61,25 @@ class CommonBuilderTest {
 
     @Test
     void testWithConsumer1OfTP1P1() {
-        Student s = CommonBuilder.of(Student::new).with(Student::setName, "学生名称").with(Student::setAge, 12).build();
+        Student s = CommonBuilder.of(Student::new)
+                .with(Student::setName, "学生名称")
+                .with(Student::setAge, 12)
+                .build();
         assertEquals("学生名称", s.getName());
         assertEquals(12, s.getAge());
     }
 
     @Test
     void testWithF() {
-        Student s1 = CommonBuilder.of(Student::new).with(Student::setName, "学生名称").with(Student::setAge, 12)
-                .with(Student::setNum, "210").build();
-        Student s = CommonBuilder.of(Student::new).withF(Student::setName, () -> "学生名称".toString())
-                .withF(Student::setNum, () -> s1.getNum()).build();
+        Student s1 = CommonBuilder.of(Student::new)
+                .with(Student::setName, "学生名称")
+                .with(Student::setAge, 12)
+                .with(Student::setNum, "210")
+                .build();
+        Student s = CommonBuilder.of(Student::new)
+                .withF(Student::setName, () -> "学生名称".toString())
+                .withF(Student::setNum, () -> s1.getNum())
+                .build();
         assertEquals(s1.getName(), s.getName());
         assertEquals(s1.getNum(), s.getNum());
     }
